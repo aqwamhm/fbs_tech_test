@@ -48,7 +48,7 @@ class ScheduleController extends Controller
         $request->validate([
             'route' => 'required|string|max:255',
             'departure_date' => 'required|date',
-            'departure_time' => 'required|date_format:H:i:s',
+            'departure_time' => 'required|date_format:H:i',
             'total_seats' => 'required|integer|min:1',
             'price' => 'required|numeric|min:0',
             'driver_name' => 'nullable|string|max:255',

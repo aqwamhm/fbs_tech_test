@@ -25,6 +25,13 @@ class BookingController extends Controller
     public function create($scheduleId)
     {
         $schedule = Schedule::findOrFail($scheduleId);
+
+        // Check if the schedule has already departed
+        if ($schedule->hasDeparted()) {
+            return redirect()->route('customer.dashboard')
+                ->with('error', 'Cannot book for this schedule as it has already departed.');
+        }
+
         $bookedSeats = $schedule->bookings->pluck('seat_number')->toArray();
         $availableSeats = [];
         for ($i = 1; $i <= $schedule->total_seats; $i++) {
@@ -41,6 +48,12 @@ class BookingController extends Controller
             'seat_number' => 'required|integer|min:1|max:12',
             'payment_proof' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        // Check if the schedule still exists and hasn't departed
+        $schedule = Schedule::findOrFail($scheduleId);
+        if ($schedule->hasDeparted()) {
+            return back()->withErrors(['schedule' => 'Cannot book for this schedule as it has already departed.']);
+        }
 
         // Check if the seat is already booked for this schedule
         $existingBooking = Booking::where('schedule_id', $scheduleId)

@@ -18,7 +18,7 @@ class DashboardController extends Controller
             ->latest()
             ->paginate(10);
 
-        $schedules = Schedule::where('departure_date', '>=', now()->format('Y-m-d'))
+        $schedules = Schedule::notDeparted()
             ->orderBy('departure_date')
             ->orderBy('departure_time')
             ->get();

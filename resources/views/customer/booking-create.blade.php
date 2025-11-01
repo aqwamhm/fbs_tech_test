@@ -2,6 +2,14 @@
     <div class="card shadow-sm border-0 m-5">
         <div class="card-body p-4">
             <h1 class="mb-5 text-center">Booking</h1>
+
+            @error('schedule')
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ $message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @enderror
+
             <form action="{{ route('customer.booking.store', $schedule->id) }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
