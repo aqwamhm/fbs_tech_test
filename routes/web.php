@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\ScheduleController as AdminScheduleController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Customer\BookingController as CustomerBookingController;
@@ -45,6 +46,14 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/admin/bookings/{id}/status', [AdminBookingController::class, 'updateStatus'])->name('admin.bookings.updateStatus');
         Route::get('/admin/booking/{booking}/confirm', [AdminBookingController::class, 'showConfirmForm'])->name('admin.booking.confirm');
         Route::put('/admin/bookings/{id}/confirm', [AdminBookingController::class, 'confirm'])->name('admin.bookings.confirm.update');
+
+        // Schedule routes
+        Route::get('/admin/schedules', [AdminScheduleController::class, 'index'])->name('admin.schedules.index');
+        Route::get('/admin/schedules/create', [AdminScheduleController::class, 'create'])->name('admin.schedules.create');
+        Route::post('/admin/schedules', [AdminScheduleController::class, 'store'])->name('admin.schedules.store');
+        Route::get('/admin/schedules/{schedule}/edit', [AdminScheduleController::class, 'edit'])->name('admin.schedules.edit');
+        Route::put('/admin/schedules/{schedule}', [AdminScheduleController::class, 'update'])->name('admin.schedules.update');
+        Route::delete('/admin/schedules/{schedule}', [AdminScheduleController::class, 'destroy'])->name('admin.schedules.destroy');
     });
 
     // Checker routes

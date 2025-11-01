@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
         // Create sample schedules
         Schedule::create([
             'route' => 'Jakarta - Bandung',
-            'departure_date' => now()->addDays(2)->format('Y-m-d'),
+            'departure_date' => now()->addDays(2)->toDateString(),
             'departure_time' => '14:00',
             'total_seats' => 12,
             'price' => 100000,
