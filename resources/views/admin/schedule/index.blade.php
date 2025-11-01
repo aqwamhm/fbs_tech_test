@@ -28,6 +28,8 @@
                     </td>
                     <td>Rp {{ number_format($schedule->price, 0, ',', '.') }}</td>
                     <td>
+                        <a href="{{ route('admin.schedules.travel-permit.show', $schedule->id) }}"
+                            class="btn btn-outline-info btn-sm">Surat Jalan</a>
                         <a href="{{ route('admin.schedules.edit', $schedule->id) }}"
                             class="btn btn-outline-primary btn-sm">Edit</a>
                         <form action="{{ route('admin.schedules.destroy', $schedule->id) }}" method="POST"

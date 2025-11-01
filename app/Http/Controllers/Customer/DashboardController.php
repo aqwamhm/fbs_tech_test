@@ -19,6 +19,7 @@ class DashboardController extends Controller
             ->paginate(10);
 
         $schedules = Schedule::notDeparted()
+            ->where('travel_permit_status', 'pending')
             ->orderBy('departure_date')
             ->orderBy('departure_time')
             ->get();

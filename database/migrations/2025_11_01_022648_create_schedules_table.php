@@ -20,6 +20,8 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->string('driver_name')->nullable();
             $table->string('vehicle_number')->nullable();
+            $table->enum('travel_permit_status', ['pending', 'issued'])->default('pending');
+            $table->timestamp('travel_permit_issued_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

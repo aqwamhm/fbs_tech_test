@@ -24,8 +24,18 @@
                     <td>{{ $schedule->departure_date->format('d M Y') }} {{ $schedule->departure_time }}</td>
                     <td>{{ $schedule->total_seats - $schedule->bookings->count() }}/{{ $schedule->total_seats }}</td>
                     <td>Rp {{ number_format($schedule->price, 0, ',', '.') }}</td>
-                    <td><a href="{{ route('customer.booking.create', ['schedule' => $schedule->id]) }}"
-                            class="btn btn-primary">Pesan</a></td>
+                    <td>
+                        @if ($schedule->canBook())
+                            <a href="{{ route('customer.booking.create', ['schedule' => $schedule->id]) }}"
+                                class="btn btn-primary">Pesan</a>
+                        @else
+                            @if ($schedule->hasTravelPermit())
+                                <button class="btn btn-secondary" disabled>Surat Jalan Sudah Dibuat</button>
+                            @else
+                                <button class="btn btn-secondary" disabled>Sudah Berangkat</button>
+                            @endif
+                        @endif
+                    </td>
                 </tr>
             @empty
                 <tr>

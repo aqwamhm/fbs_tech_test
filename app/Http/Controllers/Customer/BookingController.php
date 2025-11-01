@@ -32,6 +32,12 @@ class BookingController extends Controller
                 ->with('error', 'Cannot book for this schedule as it has already departed.');
         }
 
+        // Check if the travel permit has been issued
+        if ($schedule->hasTravelPermit()) {
+            return redirect()->route('customer.dashboard')
+                ->with('error', 'Cannot book for this schedule as the travel permit has been issued.');
+        }
+
         $bookedSeats = $schedule->bookings->pluck('seat_number')->toArray();
         $availableSeats = [];
         for ($i = 1; $i <= $schedule->total_seats; $i++) {
@@ -53,6 +59,11 @@ class BookingController extends Controller
         $schedule = Schedule::findOrFail($scheduleId);
         if ($schedule->hasDeparted()) {
             return back()->withErrors(['schedule' => 'Cannot book for this schedule as it has already departed.']);
+        }
+
+        // Check if the travel permit has been issued
+        if ($schedule->hasTravelPermit()) {
+            return back()->withErrors(['schedule' => 'Cannot book for this schedule as the travel permit has been issued.']);
         }
 
         // Check if the seat is already booked for this schedule

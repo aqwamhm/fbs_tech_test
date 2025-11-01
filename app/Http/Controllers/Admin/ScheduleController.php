@@ -66,4 +66,23 @@ class ScheduleController extends Controller
 
         return redirect()->route('admin.schedules.index')->with('success', 'Schedule deleted successfully');
     }
+
+    public function showTravelPermit(Schedule $schedule)
+    {
+        $schedule->load('bookings.user');
+        return view('admin.schedule.travel-permit', compact('schedule'));
+    }
+
+    public function issueTravelPermit(Schedule $schedule)
+    {
+        if ($schedule->hasTravelPermit()) {
+            return redirect()->route('admin.schedules.travel-permit.show', $schedule->id)
+                ->with('error', 'Travel permit has already been issued for this schedule.');
+        }
+
+        $schedule->issueTravelPermit();
+
+        return redirect()->route('admin.schedules.travel-permit.show', $schedule->id)
+            ->with('success', 'Travel permit has been issued successfully.');
+    }
 }

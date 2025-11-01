@@ -54,6 +54,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/schedules/{schedule}/edit', [AdminScheduleController::class, 'edit'])->name('admin.schedules.edit');
         Route::put('/admin/schedules/{schedule}', [AdminScheduleController::class, 'update'])->name('admin.schedules.update');
         Route::delete('/admin/schedules/{schedule}', [AdminScheduleController::class, 'destroy'])->name('admin.schedules.destroy');
+
+        // Travel permit routes
+        Route::get('/admin/schedules/{schedule}/travel-permit', [AdminScheduleController::class, 'showTravelPermit'])->name('admin.schedules.travel-permit.show');
+        Route::post('/admin/schedules/{schedule}/travel-permit', [AdminScheduleController::class, 'issueTravelPermit'])->name('admin.schedules.travel-permit.issue');
     });
 
     // Checker routes

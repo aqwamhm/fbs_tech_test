@@ -18,6 +18,8 @@ class Schedule extends Model
         'price',
         'driver_name',
         'vehicle_number',
+        'travel_permit_status',
+        'travel_permit_issued_at',
     ];
 
     protected $casts = [
@@ -46,5 +48,22 @@ class Schedule extends Model
     {
         $nowInJakarta = now()->setTimezone('Asia/Jakarta');
         return $query->whereRaw("CONCAT(departure_date, ' ', departure_time) > ?", [$nowInJakarta->format('Y-m-d H:i:s')]);
+    }
+
+    public function hasTravelPermit()
+    {
+        return $this->travel_permit_status === 'issued';
+    }
+
+    public function canBook()
+    {
+        return !$this->hasDeparted() && !$this->hasTravelPermit();
+    }
+
+    public function issueTravelPermit()
+    {
+        $this->travel_permit_status = 'issued';
+        $this->travel_permit_issued_at = now()->setTimezone('Asia/Jakarta');
+        $this->save();
     }
 }
