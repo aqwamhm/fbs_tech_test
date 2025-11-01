@@ -1,6 +1,6 @@
 <x-layout>
-    <div class="container py-4">
-        <h4 class="fw-bold mb-3">Manajemen Booking</h4>
+    <div class="py-5">
+        <h1 class="text-center mb-5">Manajemen Booking</h1>
 
         <table class="table">
             <thead>
@@ -15,33 +15,32 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>BK001</td>
-                    <td>Aqwam Hizbal</td>
-                    <td>Jakarta - Surabaya</td>
-                    <td>12A</td>
-                    <td><span class="badge bg-warning text-dark">Pending</span></td>
-                    <td><a href="" class="btn btn-sm btn-outline-primary">Detail</a></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>BK002</td>
-                    <td>Rafi Fadhlan</td>
-                    <td>Bandung - Bali</td>
-                    <td>8B</td>
-                    <td><span class="badge bg-success">Confirmed</span></td>
-                    <td><a href="" class="btn btn-sm btn-outline-primary">Detail</a></td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>BK003</td>
-                    <td>Amirul Hakim</td>
-                    <td>Surabaya - Medan</td>
-                    <td>15C</td>
-                    <td><span class="badge bg-danger">Rejected</span></td>
-                    <td><a href="" class="btn btn-sm btn-outline-primary">Detail</a></td>
-                </tr>
+                @forelse($bookings as $booking)
+                    <tr>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $booking->booking_code }}</td>
+                        <td>{{ $booking->user->name }}</td>
+                        <td>{{ $booking->schedule->route }}</td>
+                        <td>{{ $booking->seat_number }}</td>
+                        <td>
+                            @if ($booking->status == 'pending')
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            @elseif($booking->status == 'confirmed')
+                                <span class="badge bg-success">Confirmed</span>
+                            @else
+                                <span class="badge bg-danger">Rejected</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('admin.booking.confirm', $booking->id) }}"
+                                class="btn btn-sm btn-outline-primary">Detail</a>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="7" class="text-center">No bookings found</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

@@ -1,7 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Customer\BookingController as CustomerBookingController;
+use App\Http\Controllers\Customer\DashboardController as CustomerDashboardController;
 use Illuminate\Support\Facades\Route;
 
 // Redirect home to login
@@ -21,35 +25,32 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::middleware(['auth'])->group(function () {
     // Customer routes
     Route::middleware(['role:customer'])->group(function () {
-        Route::get('/customer/dashboard', function () {
-            return view('customer.dashboard');
-        })->name('customer.dashboard');
+        Route::get('/customer/dashboard', [CustomerDashboardController::class, 'index'])->name('customer.dashboard');
 
-        Route::get('/customer/booking-create', function () {
-            return view('customer.booking-create');
-        });
+        Route::get('/customer/booking-create/{schedule}', [CustomerBookingController::class, 'create'])->name('customer.booking.create');
+        Route::post('/customer/booking-create/{schedule}', [CustomerBookingController::class, 'store'])->name('customer.booking.store');
 
-        Route::get('/customer/invoice', function () {
-            return view('customer.invoice');
-        });
+        Route::get('/customer/invoice/{id}', [CustomerBookingController::class, 'showInvoice'])->name('customer.invoice');
 
-        Route::get('/customer/bookings', function () {
-            return view('customer.bookings');
-        });
+        Route::get('/customer/bookings', [CustomerBookingController::class, 'index'])->name('customer.bookings');
+
+        Route::get('/api/available-seats/{scheduleId}', [CustomerBookingController::class, 'getAvailableSeats']);
     });
 
     // Admin routes
     Route::middleware(['role:admin'])->group(function () {
-        Route::get('/admin/dashboard', function () {
-            return view('admin.dashboard');
-        })->name('admin.dashboard');
+        Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
-        Route::get('/admin/bookings', function () {
-            return view('admin.booking.bookings');
-        });
+        Route::get('/admin/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
+        Route::put('/admin/bookings/{id}/status', [AdminBookingController::class, 'updateStatus'])->name('admin.bookings.updateStatus');
+        Route::get('/admin/booking/{booking}/confirm', [AdminBookingController::class, 'showConfirmForm'])->name('admin.booking.confirm');
+        Route::put('/admin/bookings/{id}/confirm', [AdminBookingController::class, 'confirm'])->name('admin.bookings.confirm.update');
+    });
 
-        Route::get('/admin/booking/confirm', function () {
-            return view('admin.booking.booking-confirm');
+    // Checker routes
+    Route::middleware(['role:checker'])->group(function () {
+        Route::get('/checker/dashboard', function () {
+            return view('checker.dashboard');
         });
     });
 });
